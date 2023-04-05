@@ -56,6 +56,7 @@ entry_s4.pack(side="left")
 grid = Grid(100, 100, 10, canvas, P)
 
 def start_process():
+    button['state'] = 'disabled'
     L = entry_L.get()
     RUNNING_TIMES = entry_running_time.get()
     S1 = int(entry_s1.get())

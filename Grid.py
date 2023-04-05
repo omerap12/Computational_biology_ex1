@@ -1,6 +1,7 @@
 import tkinter as tk
 from Cell import Cell
 import random
+import time
 
 
 class Grid:
@@ -12,6 +13,7 @@ class Grid:
         self.selected_color = "#000000"  # black by default
         self.canvas = canvas
         self.list_of_people = []
+        self.running_times = 0
         
 
     def select_color(self, color):
@@ -63,8 +65,54 @@ class Grid:
                 available_choice.append(key)
         return random.choice(available_choice)
 
-    def choose_spreader(self) -> object:
+    def choose_spreader(self) -> None:
         self.spreader = random.choice(self.list_of_people)
-        print(self.spreader)
-        print(self.list_of_people[:5])
-        return self.spreader
+        self.spreader.is_spreader = True
+
+    def get_4_neighbors(self, cell: Cell) -> list:
+        neigbors = []
+        if cell.row-1 >= 0 and self.cells[cell.row-1][cell.col].human:
+            neigbors.append(self.cells[cell.row-1][cell.col])
+        if cell.row+1 < len(self.cells) and self.cells[cell.row+1][cell.col].human:
+            neigbors.append(self.cells[cell.row+1][cell.col])
+        if cell.col-1 >= 0 and self.cells[cell.row][cell.col-1].human:
+            neigbors.append(self.cells[cell.row][cell.col-1])
+        if cell.col+1 < len(self.cells[0]) and self.cells[cell.row][cell.col+1].human:
+            neigbors.append(self.cells[cell.row][cell.col+1])
+        return neigbors
+        
+
+    def get_8_neighbors(self, cell: Cell) -> list:
+        neigbors = []
+        neigbors += self.get_4_neighbors(cell)
+        if cell.row-1 >= 0 and cell.col-1 >= 0 and self.cells[cell.row-1][cell.col-1].human:
+            neigbors.append(self.cells[cell.row-1][cell.col-1])
+        if cell.row-1 >= 0 and cell.col+1 < len(self.cells[0]) and self.cells[cell.row-1][cell.col+1].human:
+            neigbors.append(self.cells[cell.row-1][cell.col+1])
+        if cell.row+1 < len(self.cells) and cell.col+1 < len(self.cells[0]) and self.cells[cell.row+1][cell.col+1].human:
+            neigbors.append(self.cells[cell.row+1][cell.col+1])
+        if cell.row+1 < len(self.cells) and cell.col-1 >=0 and self.cells[cell.row+1][cell.col-1].human:
+            neigbors.append(self.cells[cell.row+1][cell.col-1])
+        return neigbors
+
+
+
+    def start_simulation(self):
+        S = {1: 1, 2: 2/3, 3: 1/3, 4: 0}
+        spreaders = [self.spreader]
+        spreaders[0].human.S_index = 4
+        for cycle in range(self.running_times):
+            print(len(spreaders))
+            for spreader in spreaders:
+                rand_num = random.random()
+                if True:
+                    neighbors = self.get_8_neighbors(spreader)
+                    for neighbor in neighbors:
+                        neighbor.is_spreader = True
+                        spreaders.append(neighbor)
+                        neighbor.human.heard_whisper()
+            for row in range(len(self.cells)):
+                for column in range (len(self.cells[0])):
+                    self.cells[row][column].choose_color()
+            self.draw()
+            time.sleep(2)

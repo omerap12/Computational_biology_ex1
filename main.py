@@ -9,7 +9,7 @@ global S3
 global S4
 
 S1,S2,S3,S4 = 0,0,0,0
-P = 0.2
+P = 0.5
 
 # create the tkinter window and canvas
 root = tk.Tk()
@@ -57,8 +57,8 @@ grid = Grid(100, 100, 10, canvas, P)
 
 def start_process():
     button['state'] = 'disabled'
-    L = entry_L.get()
-    RUNNING_TIMES = entry_running_time.get()
+    L = int(entry_L.get())
+    RUNNING_TIMES = int(entry_running_time.get())
     S1 = int(entry_s1.get())
     S2 = int(entry_s2.get())
     S3 = int(entry_s3.get())
@@ -67,8 +67,10 @@ def start_process():
     grid.S2 = S2
     grid.S3 = S3
     grid.S4 = S4
+    grid.running_times = RUNNING_TIMES
     grid.populate()
     grid.choose_spreader()
+    grid.start_simulation()
     grid.draw()
 
 

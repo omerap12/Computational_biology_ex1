@@ -11,6 +11,7 @@ class Grid:
         self.cells = [[Cell(row, col,p) for col in range(width)] for row in range(height)]
         self.selected_color = "#000000"  # black by default
         self.canvas = canvas
+        self.list_of_people = []
         
 
     def select_color(self, color):
@@ -40,6 +41,7 @@ class Grid:
                 cell = self.cells[row][column]
                 if cell.human is not None:
                     number_of_people += 1
+                    self.list_of_people.append(cell)
         self.number_of_people = number_of_people
         S1_number,S2_number,S3_number,S4_number = number_of_people*self.S1,number_of_people*self.S2,number_of_people*self.S3,number_of_people*self.S4
         self.index_to_S = {1:S1_number,2:S2_number,3:S3_number,4:S4_number}
@@ -60,3 +62,9 @@ class Grid:
             if value > 0:
                 available_choice.append(key)
         return random.choice(available_choice)
+
+    def choose_spreader(self) -> object:
+        self.spreader = random.choice(self.list_of_people)
+        print(self.spreader)
+        print(self.list_of_people[:5])
+        return self.spreader

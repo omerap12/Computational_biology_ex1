@@ -68,6 +68,7 @@ def start_process():
     grid.S3 = S3
     grid.S4 = S4
     grid.populate()
+    grid.choose_spreader()
     grid.draw()
 
 

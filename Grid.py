@@ -3,11 +3,11 @@ from Cell import Cell
 
 
 class Grid:
-    def __init__(self, width, height, cell_size, canvas):
+    def __init__(self, width, height, cell_size, canvas,p):
         self.width = width
         self.height = height
         self.cell_size = cell_size
-        self.cells = [[Cell(row, col) for col in range(width)] for row in range(height)]
+        self.cells = [[Cell(row, col,p) for col in range(width)] for row in range(height)]
         self.selected_color = "#000000"  # black by default
         self.canvas = canvas
 

@@ -8,13 +8,13 @@ global S2
 global S3
 global S4
 
-P = 0.5
+P = 0.2
 
 # create the tkinter window and canvas
 root = tk.Tk()
 canvas = tk.Canvas(root, width=100 * 10, height=100 * 10, bg="#ffffff")
 # create the grid
-grid = Grid(100, 100, 10, canvas)
+grid = Grid(100, 100, 10, canvas,P)
 canvas.pack()
 
 # add a text input
@@ -65,8 +65,8 @@ def print_variables():
 button = tk.Button(root, text="Print BB", command=print_variables)
 button.pack(side="top")
 
-# bind mouse click events to the canvas
-canvas.bind("<Button-1>", grid.paint_cell)
+# # bind mouse click events to the canvas
+# canvas.bind("<Button-1>", grid.paint_cell)
 
 # create a color palette
 palette = tk.Frame(root)

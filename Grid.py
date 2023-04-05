@@ -99,18 +99,20 @@ class Grid:
 
     def start_simulation(self):
         S = {1: 1, 2: 2/3, 3: 1/3, 4: 0}
-        spreaders = [self.spreader]
-        spreaders[0].human.S_index = 4
+        spreaders = set()
+        self.spreader.human.S_index = 4
+        spreaders.add(self.spreader)
         for cycle in range(self.running_times):
-            print(len(spreaders))
+            new_spreaders = set()
             for spreader in spreaders:
                 rand_num = random.random()
-                if True:
+                if rand_num > float(S[spreader.human.S_index]):
                     neighbors = self.get_8_neighbors(spreader)
                     for neighbor in neighbors:
                         neighbor.is_spreader = True
-                        spreaders.append(neighbor)
+                        new_spreaders.add(neighbor)
                         neighbor.human.heard_whisper()
+            spreaders = spreaders.union(new_spreaders)
             for row in range(len(self.cells)):
                 for column in range (len(self.cells[0])):
                     self.cells[row][column].choose_color()

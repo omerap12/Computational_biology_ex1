@@ -8,13 +8,12 @@ global S2
 global S3
 global S4
 
+S1,S2,S3,S4 = 0,0,0,0
 P = 0.2
 
 # create the tkinter window and canvas
 root = tk.Tk()
 canvas = tk.Canvas(root, width=100 * 10, height=100 * 10, bg="#ffffff")
-# create the grid
-grid = Grid(100, 100, 10, canvas,P)
 canvas.pack()
 
 # add a text input
@@ -54,19 +53,24 @@ entry_s4 = tk.Entry(root, width=10)
 entry_s4.pack(side="left")
 
 
-def print_variables():
+grid = Grid(100, 100, 10, canvas, P)
+
+def start_process():
     L = entry_L.get()
     RUNNING_TIMES = entry_running_time.get()
-    S1 = entry_s1.get()
-    S2 = entry_s2.get()
-    S3 = entry_s3.get()
-    S4 = entry_s4.get()
+    S1 = int(entry_s1.get())
+    S2 = int(entry_s2.get())
+    S3 = int(entry_s3.get())
+    S4 = int(entry_s4.get())
+    grid.S1 = S1
+    grid.S2 = S2
+    grid.S3 = S3
+    grid.S4 = S4
+    grid.populate()
+    grid.draw()
 
-button = tk.Button(root, text="Print BB", command=print_variables)
-button.pack(side="top")
 
-# # bind mouse click events to the canvas
-# canvas.bind("<Button-1>", grid.paint_cell)
+
 
 # create a color palette
 palette = tk.Frame(root)
@@ -75,6 +79,9 @@ palette.pack(side="bottom")
 
 # draw the initial grid
 grid.draw()
+
+button = tk.Button(root, text="Print BB", command=start_process)
+button.pack(side="top")
 
 # start the tkinter event loop
 root.mainloop()

@@ -5,7 +5,8 @@ import time
 
 
 class Grid:
-    def __init__(self, width, height, cell_size, canvas,p):
+    def __init__(self, root, width, height, cell_size, canvas,p):
+        self.master = root
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -26,6 +27,7 @@ class Grid:
         self.draw()
 
     def draw(self):
+        self.canvas.delete("all")
         for row in range(self.height):
             for col in range(self.width):
                 color = self.cells[row][col].color
@@ -34,6 +36,10 @@ class Grid:
                 x1 = x0 + self.cell_size
                 y1 = y0 + self.cell_size
                 self.canvas.create_rectangle(x0, y0, x1, y1, fill=color, outline="#cccccc")
+        self.master.update()
+
+    def update_grid(self):
+        self.draw()
 
     def populate(self):
         # calculate the number of people on the grid
@@ -45,25 +51,44 @@ class Grid:
                     number_of_people += 1
                     self.list_of_people.append(cell)
         self.number_of_people = number_of_people
-        S1_number,S2_number,S3_number,S4_number = number_of_people*self.S1,number_of_people*self.S2,number_of_people*self.S3,number_of_people*self.S4
+        S1_number,S2_number,S3_number,S4_number = int(number_of_people*self.S1), int(number_of_people*self.S2), int(number_of_people*self.S3), int(number_of_people*self.S4)
+        print(S1_number,S2_number,S3_number,S4_number)
         self.index_to_S = {1:S1_number,2:S2_number,3:S3_number,4:S4_number}
+
+        copy_list_of_people = self.list_of_people.copy()
+        random.shuffle(copy_list_of_people)
+        while copy_list_of_people:
+            cell = copy_list_of_people.pop()
+            selected = self.assign_human_S()
+            if selected == -1:
+                    break
+            self.index_to_S[selected] -= 1
+            cell.human.S_index = selected
+            cell.choose_color()
+
+        self.draw()
         
-        for row in range(len(self.cells)):
-            for column in range (len(self.cells[0])):
-                cell = self.cells[row][column]
-                if cell.human is None:
-                    continue
-                selected = self.assign_human_S()
-                self.index_to_S[selected] -= 1
-                cell.human.S_index = selected
-                cell.choose_color()
+        # for row in range(len(self.cells)):
+        #     for column in range (len(self.cells[0])):
+        #         cell = self.cells[row][column]
+        #         if cell.human is None:
+        #             continue
+        #         selected = self.assign_human_S()
+        #         if selected == -1:
+        #             break
+        #         self.index_to_S[selected] -= 1
+        #         cell.human.S_index = selected
+        #         cell.choose_color()
 
     def assign_human_S(self) -> int:
         available_choice = []
         for key, value in self.index_to_S.items():
             if value > 0:
                 available_choice.append(key)
-        return random.choice(available_choice)
+        try:
+            return random.choice(available_choice)
+        except IndexError:
+            return -1
 
     def choose_spreader(self) -> None:
         self.spreader = random.choice(self.list_of_people)
@@ -103,6 +128,7 @@ class Grid:
         self.spreader.human.S_index = 4
         spreaders.add(self.spreader)
         for cycle in range(self.running_times):
+            print(cycle)
             new_spreaders = set()
             for spreader in spreaders:
                 rand_num = random.random()
@@ -112,9 +138,7 @@ class Grid:
                         neighbor.is_spreader = True
                         new_spreaders.add(neighbor)
                         neighbor.human.heard_whisper()
+                        neighbor.choose_color()
             spreaders = spreaders.union(new_spreaders)
-            for row in range(len(self.cells)):
-                for column in range (len(self.cells[0])):
-                    self.cells[row][column].choose_color()
-            self.draw()
             time.sleep(2)
+            self.draw()

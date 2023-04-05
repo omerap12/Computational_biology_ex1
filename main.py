@@ -1,5 +1,6 @@
 import tkinter as tk
 from Grid import Grid
+import time
 
 global RUNNING_TIMES
 global L
@@ -53,25 +54,26 @@ entry_s4 = tk.Entry(root, width=10)
 entry_s4.pack(side="left")
 
 
-grid = Grid(100, 100, 10, canvas, P)
+grid = Grid(root, 100, 100, 10, canvas, P)
 
 def start_process():
     button['state'] = 'disabled'
     L = int(entry_L.get())
     RUNNING_TIMES = int(entry_running_time.get())
-    S1 = int(entry_s1.get())
-    S2 = int(entry_s2.get())
-    S3 = int(entry_s3.get())
-    S4 = int(entry_s4.get())
+    S1 = int(entry_s1.get())/100
+    S2 = int(entry_s2.get())/100
+    S3 = int(entry_s3.get())/100
+    S4 = int(entry_s4.get())/100
     grid.S1 = S1
     grid.S2 = S2
     grid.S3 = S3
     grid.S4 = S4
     grid.running_times = RUNNING_TIMES
     grid.populate()
+    # grid.draw()
     grid.choose_spreader()
+    time.sleep(5)
     grid.start_simulation()
-    grid.draw()
 
 
 

@@ -11,6 +11,8 @@ global S4
 
 S1,S2,S3,S4 = 0,0,0,0
 P = 0.5
+L = 0
+
 
 # create the tkinter window and canvas
 root = tk.Tk()
@@ -69,6 +71,7 @@ def start_process():
     grid.S3 = S3
     grid.S4 = S4
     grid.running_times = RUNNING_TIMES
+    grid.L = L
     grid.populate()
     # grid.draw()
     grid.choose_spreader()

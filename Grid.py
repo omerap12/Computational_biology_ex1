@@ -5,12 +5,12 @@ import time
 
 
 class Grid:
-    def __init__(self, root, width, height, cell_size, canvas,p):
+    def __init__(self, root, width, height, cell_size, canvas, p):
         self.master = root
         self.width = width
         self.height = height
         self.cell_size = cell_size
-        self.cells = [[Cell(row, col,p) for col in range(width)] for row in range(height)]
+        self.cells = [[Cell(row, col, p) for col in range(width)] for row in range(height)]
         self.selected_color = "#000000"  # black by default
         self.canvas = canvas
         self.list_of_people = []
@@ -51,6 +51,9 @@ class Grid:
                     number_of_people += 1
                     self.list_of_people.append(cell)
         self.number_of_people = number_of_people
+        sum_inputs = sum((self.S1, self.S2, self.S3, self.S4))
+        if sum_inputs < 100:
+            self.S4 += 100 - sum_inputs
         S1_number,S2_number,S3_number,S4_number = int(number_of_people*self.S1), int(number_of_people*self.S2), int(number_of_people*self.S3), int(number_of_people*self.S4)
         print(S1_number,S2_number,S3_number,S4_number)
         self.index_to_S = {1:S1_number,2:S2_number,3:S3_number,4:S4_number}
@@ -61,10 +64,11 @@ class Grid:
             cell = copy_list_of_people.pop()
             selected = self.assign_human_S()
             if selected == -1:
-                    break
+                break
             self.index_to_S[selected] -= 1
             cell.human.S_index = selected
             cell.human.S_index_original = selected
+            cell.human.L = self.L
             cell.choose_color()
 
         self.draw()
@@ -106,7 +110,7 @@ class Grid:
         if cell.col+1 < len(self.cells[0]) and self.cells[cell.row][cell.col+1].human:
             neigbors.append(self.cells[cell.row][cell.col+1])
         return neigbors
-        
+
 
     def get_8_neighbors(self, cell: Cell) -> list:
         neigbors = []
@@ -132,9 +136,15 @@ class Grid:
             print(cycle)
             new_spreaders = set()
             for spreader in spreaders:
+                if spreader.human.L > 0:
+                    spreader.human.L -= 1
+                    continue
+                # if spreader.human.L = 0
                 rand_num = random.random()
-                if rand_num > float(S[spreader.human.S_index]):
+                if rand_num < float(S[spreader.human.S_index]):
                     neighbors = self.get_8_neighbors(spreader)
+                    if neighbors:
+                        spreader.human.L = self.L
                     for neighbor in neighbors:
                         neighbor.is_spreader = True
                         new_spreaders.add(neighbor)

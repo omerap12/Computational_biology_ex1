@@ -64,6 +64,7 @@ class Grid:
                     break
             self.index_to_S[selected] -= 1
             cell.human.S_index = selected
+            cell.human.S_index_original = selected
             cell.choose_color()
 
         self.draw()
@@ -142,3 +143,5 @@ class Grid:
             spreaders = spreaders.union(new_spreaders)
             time.sleep(2)
             self.draw()
+            for people in self.list_of_people:
+                people.human.reset()

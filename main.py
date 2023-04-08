@@ -1,6 +1,7 @@
 import tkinter as tk
 from Grid import Grid
 import time
+from tkinter import messagebox
 
 
 class Automation:
@@ -135,8 +136,11 @@ class Automation:
             self.grid.populate_fast()
         time.sleep(3)
         self.grid.start_simulation()
+        messagebox.showinfo("Done", "Simulation has finished!")
+
 
 
 if __name__ == "__main__":
     automation = Automation()
     automation.initial_gui()
+

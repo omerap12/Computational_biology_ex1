@@ -106,18 +106,20 @@ class Grid:
         self.group_arranger()
         # create a list of duplicates of all the groups to make the layers in the grid
         array_of_duplicates = [1]*self.index_to_S[1] + [2]*self.index_to_S[2] + [3]*self.index_to_S[3] + [4]*self.index_to_S[4]
+        # if there is not enough in the list of the duplicates.
+        if len(self.list_of_people)-len(array_of_duplicates) > 0:
+            array_of_duplicates += [4]*(len(self.list_of_people)-len(array_of_duplicates))
         # choose the spreader from S1 - the group with the most high chance to spread.
         self.spreader = self.list_of_people[int(random.randint(0, self.index_to_S[1]))]
         self.spreader.is_spreader = True
         for row in range(len(self.cells)):
             for col in range(len(self.cells[0])):
                 cell = self.cells[row][col]
-                if cell.human is None:
-                    continue
-                cell.human.S_index = array_of_duplicates.pop(0)
-                cell.human.S_index_original = cell.human.S_index
-                cell.human.L = self.L
-                cell.choose_color()
+                if cell.human:
+                    cell.human.S_index = array_of_duplicates.pop(0)
+                    cell.human.S_index_original = cell.human.S_index
+                    cell.human.L = self.L
+                    cell.choose_color()
         self.draw()
 
     """

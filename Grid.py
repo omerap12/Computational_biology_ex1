@@ -175,14 +175,17 @@ class Grid:
         self.spreader.human.S_index = 2
         spreaders.add(self.spreader)
         for cycle in range(self.running_times):
-            print(cycle)
+            # print(str(cycle) + "   " + str((float(len(spreaders)/self.number_of_people))))
             new_spreaders = set()
+            remove_spreaders = set()
             for spreader in spreaders:
                 # spreader can't spread a rumor anyway.
                 if spreader.human.L > 0:
                     spreader.human.L -= 1
                     continue
                 # if spreader.human.L = 0
+                if spreader.human.L == 1:
+                    remove_spreaders.add(spreader)
                 rand_num = random.random()
                 if rand_num < float(S[spreader.human.S_index]):
                     neighbors = self.get_8_neighbors(spreader)
@@ -196,7 +199,12 @@ class Grid:
                         neighbor.choose_color()
             # adding the new spreaders from the current iteration to the spreaders list.
             spreaders = spreaders.union(new_spreaders)
+            for s in remove_spreaders:
+                s.is_spreader = False
+            spreaders.difference_update(remove_spreaders)
             time.sleep(1)
             self.draw()
             for people in self.list_of_people:
                 people.human.reset()
+        print("end")
+        # print(float(len(spreaders)/self.number_of_people))

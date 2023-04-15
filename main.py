@@ -9,7 +9,7 @@ class Automation:
         # create the tkinter window and canvas
         self.root = tk.Tk()
         self.canvas = tk.Canvas(self.root, width=100 * 10, height=100 * 10, bg="#ffffff")
-        self.p_value = 0.5
+        self.p_value = 0.6
         self.grid = Grid(self.root, 100, 100, 10, self.canvas, self.p_value)
 
         """
